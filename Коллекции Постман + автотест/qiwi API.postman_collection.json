@@ -1,0 +1,447 @@
+{
+	"info": {
+		"_postman_id": "262d361e-0436-476d-8787-a1abe80bac37",
+		"name": "qiwi API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46881398",
+		"_collection_link": "https://vigroz-6776336.postman.co/workspace/vigroz's-Workspace~d5b5dc23-863c-4319-834d-2ba55c4cdf8d/collection/46881398-262d361e-0436-476d-8787-a1abe80bac37?action=share&source=collection_link&creator=46881398"
+	},
+	"item": [
+		{
+			"name": "Проверка доступности",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Код ответа 200\", () => pm.response.to.have.status(200));\r",
+							"\r",
+							"pm.test(\"Ответ содержит поля 'id' и 'content'\", () => {\r",
+							"    let json;\r",
+							"    try {\r",
+							"        json = pm.response.json();\r",
+							"        pm.expect(json).to.have.property('id');\r",
+							"        pm.expect(json).to.have.property('content');\r",
+							"        pm.expect(json.content).to.have.property('elements');\r",
+							"    } catch (e) {\r",
+							"        pm.expect.fail(\"Ответ не является валидным JSON\");\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Форма содержит поле 'account'\", () => {\r",
+							"    let json;\r",
+							"    try {\r",
+							"        json = pm.response.json();\r",
+							"        const fields = json.content.elements;\r",
+							"        const accountField = fields.find(f => f.name === \"account\");\r",
+							"        pm.expect(accountField).to.exist;\r",
+							"    } catch (e) {\r",
+							"        pm.expect.fail(\"Ответ не является валидным JSON\");\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{qiwi_token}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Application-Id",
+						"value": "{{app_id}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Application-Secret",
+						"value": "{{app_secret}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/partner/sinap/providers/mosoblgaz-podolsk/form",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"partner",
+						"sinap",
+						"providers",
+						"mosoblgaz-podolsk",
+						"form"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "запрос баланса",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Код ответа 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Ответ содержит поле balance\", function () {\r",
+							"    // Проверяем, что ответ — валидный JSON\r",
+							"    let json;\r",
+							"    try {\r",
+							"        json = pm.response.json();\r",
+							"        pm.expect(json).to.have.property('balance');\r",
+							"        pm.expect(json.balance).to.have.property('value');\r",
+							"        pm.expect(json.balance).to.have.property('currency');\r",
+							"    } catch (e) {\r",
+							"        pm.expect.fail(\"Ответ не является валидным JSON\");\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Значение баланса > 0 и валюта — RUB\", function () {\r",
+							"    let json;\r",
+							"    try {\r",
+							"        json = pm.response.json();\r",
+							"        const balanceValue = parseFloat(json.balance.value);\r",
+							"        const currency = json.balance.currency;\r",
+							"\r",
+							"        pm.expect(currency).to.eql(\"RUB\");\r",
+							"        pm.expect(balanceValue).to.be.a('number');\r",
+							"        pm.expect(balanceValue).to.be.greaterThan(0);\r",
+							"    } catch (e) {\r",
+							"        pm.expect.fail(\"Ответ не является валидным JSON или отсутствует поле баланса\");\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{qiwi_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/partner/payout/v1/agents/{{agentId}}/points/{{pointId}}/balance",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"partner",
+						"payout",
+						"v1",
+						"agents",
+						"{{agentId}}",
+						"points",
+						"{{pointId}}",
+						"balance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "создание платежа",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Код ответа 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Ответ содержит paymentId и он совпадает с запросом\", function () {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(json).to.have.property('paymentId', pm.variables.get(\"paymentId\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Статус заявки — READY\", function () {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(json.status).to.have.property('value', 'READY');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Сумма и валюта указаны верно\", function () {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(json.amount).to.have.property('value');\r",
+							"    pm.expect(parseFloat(json.amount.value)).to.be.greaterThan(0);\r",
+							"    pm.expect(json.amount.currency).to.eql(\"RUB\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Комиссия присутствует и в RUB\", function () {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(json).to.have.property('commission');\r",
+							"    pm.expect(json.commission.value).to.be.a('string');\r",
+							"    pm.expect(json.commission.currency).to.eql(\"RUB\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Данные получателя корректны\", function () {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(json.recipientDetails.providerCode).to.eql(\"qiwi-wallet\");\r",
+							"    pm.expect(json.recipientDetails.fields.account).to.eql(\"79123456789\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Телефон клиента НЕ замаскирован\", function () {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(json.customer).to.have.property('phone');\r",
+							"    pm.expect(json.customer.phone).to.match(/^\\d{10,11}$/);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Источник платежа и доп. поля присутствуют\", function () {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(json.source).to.have.property('paymentToolType', 'CASH');\r",
+							"    pm.expect(json).to.have.property('customFields');\r",
+							"    pm.expect(json.customFields).to.have.property('cashier');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Реквизиты для бухгалтерии есть\", function () {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(json).to.have.property('billingDetails');\r",
+							"    pm.expect(json.billingDetails).to.have.property('transactionId');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{qiwi_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"recipientDetails\": {\r\n    \"providerCode\": \"Bilain\",\r\n    \"fields\": {\r\n      \"account\": \"79123456789\"\r\n    }\r\n  },\r\n  \"amount\": {\r\n    \"value\": \"1.00\",\r\n    \"currency\": \"RUB\"\r\n  },\r\n  \"customer\": {\r\n    \"account\": \"test_user_001\",\r\n    \"email\": \"test@mail.com\",\r\n    \"phone\": \"79123456789\"\r\n  },\r\n  \"source\": {\r\n    \"paymentType\": \"WITH_EXTRA_CHARGE\",\r\n    \"paymentToolType\": \"CASH\",\r\n    \"paymentTerminalType\": \"ATM_CASH_IN\",\r\n    \"paymentDate\": \"2025-08-26T14:02:35.589+03:00\",\r\n    \"extraCharge\": {\r\n      \"value\": \"1.00\",\r\n      \"currency\": \"RUB\"\r\n  },\r\n  \"callbackUrl\": \"https://domain/path\",\r\n  \"IdentificationType\": \"NONE\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/partner/payout/v1/agents/{{agentId}}/points/{{pointId}}/payments/{{paymentsID}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"partner",
+						"payout",
+						"v1",
+						"agents",
+						"{{agentId}}",
+						"points",
+						"{{pointId}}",
+						"payments",
+						"{{paymentsID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Исполнение платежа",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Код ответа 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Ответ содержит paymentId и он совпадает с запрашиваемым\", function () {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(json).to.have.property('paymentId', pm.variables.get(\"paymentId\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Статус платежа — IN_PROGRESS\", function () {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(json.status).to.have.property('value');\r",
+							"    pm.expect(json.status.value).to.be.oneOf([\"IN_PROGRESS\", \"PROCESSED\", \"PENDING\"]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Сумма и валюта указаны корректно\", function () {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(json.amount).to.have.property('value');\r",
+							"    pm.expect(json.amount.value).to.be.a('string');\r",
+							"    pm.expect(parseFloat(json.amount.value)).to.be.greaterThan(0);\r",
+							"    pm.expect(json.amount.currency).to.eql(\"RUB\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Комиссия присутствует\", function () {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(json).to.have.property('commission');\r",
+							"    pm.expect(json.commission).to.have.property('value');\r",
+							"    pm.expect(json.commission.currency).to.eql(\"RUB\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Телефон клиента НЕ замаскирован\", function () {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(json.customer).to.have.property('phone');\r",
+							"    pm.expect(json.customer.phone).to.match(/^\\d{10,11}$/); \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Источник платежа и пользовательские поля присутствуют\", function () {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(json.source).to.have.property('paymentToolType');\r",
+							"    pm.expect(json).to.have.property('customFields');\r",
+							"    pm.expect(json.customFields).to.have.property('cashier');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Реквизиты для бухгалтерии присутствуют\", function () {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(json).to.have.property('billingDetails');\r",
+							"    pm.expect(json.billingDetails).to.have.property('transactionId');\r",
+							"    pm.expect(json.billingDetails).to.have.property('rrn');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{qiwi_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api-test.qiwi.com/partner/payout/v1/agents/{{agentId}}/points/{{pointId}}/payments/{{paymentsID}}/execute",
+					"protocol": "https",
+					"host": [
+						"api-test",
+						"qiwi",
+						"com"
+					],
+					"path": [
+						"partner",
+						"payout",
+						"v1",
+						"agents",
+						"{{agentId}}",
+						"points",
+						"{{pointId}}",
+						"payments",
+						"{{paymentsID}}",
+						"execute"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "app_id",
+			"value": "123"
+		},
+		{
+			"key": "app_secret",
+			"value": "123"
+		},
+		{
+			"key": "qiwi_token",
+			"value": "mock-token"
+		},
+		{
+			"key": "URL",
+			"value": "https://api-test.qiwi.com"
+		},
+		{
+			"key": "agentId",
+			"value": "acme",
+			"type": "string"
+		},
+		{
+			"key": "pointId",
+			"value": "00001",
+			"type": "string"
+		},
+		{
+			"key": "paymentsID",
+			"value": "pay_001",
+			"type": "default"
+		}
+	]
+}

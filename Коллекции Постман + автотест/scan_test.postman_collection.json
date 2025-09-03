@@ -1,0 +1,294 @@
+{
+	"info": {
+		"_postman_id": "3cc97623-6a8a-401c-a072-078846f1fc94",
+		"name": "scan_test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46881398",
+		"_collection_link": "https://vigroz-6776336.postman.co/workspace/vigroz's-Workspace~d5b5dc23-863c-4319-834d-2ba55c4cdf8d/collection/46881398-3cc97623-6a8a-401c-a072-078846f1fc94?action=share&source=collection_link&creator=46881398"
+	},
+	"item": [
+		{
+			"name": "авторизация",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Токен получен\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"auth_token\", jsonData.accessToken);\r",
+							"});\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"login\": \"{{test_login}}\",\r\n    \"password\": \"{{test_password}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/account/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"account",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "запрос текущего баланса",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"отследили баланс\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"current_balance\", jsonData.balance);\r",
+							"});\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/v1/account/balance",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"account",
+						"balance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "запрос тем публикаций",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"отследили название тем и их колличество\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"        pm.collectionVariables.set(\"subjects_name1\", jsonData.subjects[0].name);\r",
+							"    pm.collectionVariables.set(\"subjects_name2\", jsonData.subjects[1].name);\r",
+							"    pm.collectionVariables.set(\"subjects_name3\", jsonData.subjects[2].name);\r",
+							"    pm.collectionVariables.set(\"subjects_total\", jsonData.totalCount);\r",
+							"});\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/v1/entities/subjects?index=0&pageSize=5",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"entities",
+						"subjects"
+					],
+					"query": [
+						{
+							"key": "index",
+							"value": "0"
+						},
+						{
+							"key": "pageSize",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получение документов по идентификаторам",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"отследили название тем и их колличество\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"news_agent_1\", jsonData.documents[0].title);\r",
+							"    pm.collectionVariables.set(\"news_agent_2\", jsonData.documents[1].title);\r",
+							"});\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ids\": [\"{{document_id1}}\", \"{{document_id2}}\"]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/search/getDocuments",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"search",
+						"getDocuments"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{auth_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "test_login",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "test_password",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "base_url",
+			"value": "https://gateway.scan-interfax.ru",
+			"type": "string"
+		},
+		{
+			"key": "current_balance",
+			"value": ""
+		},
+		{
+			"key": "subjects_name1",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "subjects_name2",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "subjects_name3",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "subjects_total",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "document_id1",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "document_id2",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "news_agent_1",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "news_agent_2",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

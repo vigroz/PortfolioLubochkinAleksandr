@@ -1,0 +1,195 @@
+{
+	"info": {
+		"_postman_id": "6a7ce19f-206e-483d-986e-0fe1a54a7fc2",
+		"name": "Sklad Trade",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46881398",
+		"_collection_link": "https://vigroz-6776336.postman.co/workspace/vigroz's-Workspace~d5b5dc23-863c-4319-834d-2ba55c4cdf8d/collection/46881398-6a7ce19f-206e-483d-986e-0fe1a54a7fc2?action=share&source=collection_link&creator=46881398"
+	},
+	"item": [
+		{
+			"name": "Сортировка от А до Я",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"category\": null,\r\n  \"search\": null,\r\n  \"sort\": \"name\",\r\n  \"offset\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://qa.skillfactory.ru/api/catalog/filter/",
+					"protocol": "https",
+					"host": [
+						"qa",
+						"skillfactory",
+						"ru"
+					],
+					"path": [
+						"api",
+						"catalog",
+						"filter",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Сортировка от Я до А",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"category\": null,\r\n  \"search\": null,\r\n  \"sort\": \"-name\",\r\n  \"offset\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://qa.skillfactory.ru/api/catalog/filter/",
+					"protocol": "https",
+					"host": [
+						"qa",
+						"skillfactory",
+						"ru"
+					],
+					"path": [
+						"api",
+						"catalog",
+						"filter",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Сортировка низкие цены",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"category\": null,\r\n  \"search\": null,\r\n  \"sort\": \"price\",\r\n  \"offset\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://qa.skillfactory.ru/api/catalog/filter/?=",
+					"protocol": "https",
+					"host": [
+						"qa",
+						"skillfactory",
+						"ru"
+					],
+					"path": [
+						"api",
+						"catalog",
+						"filter",
+						""
+					],
+					"query": [
+						{
+							"key": "",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Сортировка чай",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"category\": 3,\r\n  \"search\": null,\r\n  \"sort\": \"name\",\r\n  \"offset\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://qa.skillfactory.ru/api/catalog/filter/",
+					"protocol": "https",
+					"host": [
+						"qa",
+						"skillfactory",
+						"ru"
+					],
+					"path": [
+						"api",
+						"catalog",
+						"filter",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "https://petfriends.skillfactory.ru/api/pets",
+					"protocol": "https",
+					"host": [
+						"petfriends",
+						"skillfactory",
+						"ru"
+					],
+					"path": [
+						"api",
+						"pets"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "catalog",
+			"value": "https://qa.skillfactory.ru/api/catalog/filter/",
+			"type": "string"
+		}
+	]
+}

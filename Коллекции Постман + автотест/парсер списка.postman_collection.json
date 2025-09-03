@@ -1,0 +1,94 @@
+{
+	"info": {
+		"_postman_id": "dbe2647e-d9dc-47ea-9dd7-539261e76ef7",
+		"name": "majestic список",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46881398",
+		"_collection_link": "https://vigroz-6776336.postman.co/workspace/vigroz's-Workspace~d5b5dc23-863c-4319-834d-2ba55c4cdf8d/collection/46881398-dbe2647e-d9dc-47ea-9dd7-539261e76ef7?action=share&source=collection_link&creator=46881398"
+	},
+	"item": [
+		{
+			"name": "получение списка авто",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Получаем ответ в виде текста\r",
+							"const responseBody = pm.response.text();\r",
+							"\r",
+							"// Используем регулярное выражение для извлечения всех содержимых элементов с классом ymcKnRT6\r",
+							"const regex = /<div class=\"ymcKnRT6\">(.*?)<\\/div>/g;\r",
+							"let matches;\r",
+							"let values = [];\r",
+							"\r",
+							"// Ищем все совпадения\r",
+							"while ((matches = regex.exec(responseBody)) !== null) {\r",
+							"    // Добавляем найденное значение в массив\r",
+							"    values.push(matches[1].trim());\r",
+							"}\r",
+							"\r",
+							"// Пронумеровываем значения\r",
+							"const numberedValues = values.map((value, index) => `${index + 1}. ${value}`);\r",
+							"\r",
+							"// Объединяем все пронумерованные значения в одну строку, разделенную пробелами\r",
+							"const combinedValues = numberedValues.join(' ');\r",
+							"\r",
+							"// Сохраняем объединенные пронумерованные значения в переменной окружения\r",
+							"pm.environment.set(\"ymcKnRT6_values5\", combinedValues);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://wiki.majestic-rp.ru/ru/vehicles?sortBy=price&sortValue=-1&view=list&page=5",
+					"protocol": "https",
+					"host": [
+						"wiki",
+						"majestic-rp",
+						"ru"
+					],
+					"path": [
+						"ru",
+						"vehicles"
+					],
+					"query": [
+						{
+							"key": "sortBy",
+							"value": "price"
+						},
+						{
+							"key": "sortValue",
+							"value": "-1"
+						},
+						{
+							"key": "view",
+							"value": "list"
+						},
+						{
+							"key": "page",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
